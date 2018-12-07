@@ -1,0 +1,273 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.vng.zalo.sdk.oa;
+
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.vng.zalo.sdk.APIConfig;
+import com.vng.zalo.sdk.APIException;
+import com.vng.zalo.sdk.EndPoint;
+import com.vng.zalo.sdk.ZaloBaseClient;
+import com.vng.zalo.sdk.oa.message.MsgAction;
+import com.vng.zalo.sdk.oa.message.MsgGif;
+import com.vng.zalo.sdk.oa.message.MsgImage;
+import com.vng.zalo.sdk.oa.message.MsgLink;
+import com.vng.zalo.sdk.utils.JsonUtils;
+import com.vng.zalo.sdk.utils.MacUtils;
+import java.io.File;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.commons.io.FileUtils;
+
+/**
+ *
+ * @author nghiadc
+ */
+public class ZaloOaClient extends ZaloBaseClient {
+
+    private final long MAXIMUM_FILE_SIZE = 5242880l;
+    private ZaloOaInfo oaInfo;
+    private ZaloAppInfo appInfo;
+
+    public ZaloOaClient(ZaloOaInfo info) {
+        this.oaInfo = info;
+    }
+
+    public ZaloOaClient(ZaloAppInfo appInfo) {
+        this.appInfo = appInfo;
+    }
+
+    public ZaloOaClient(ZaloOaInfo oaInfo, ZaloAppInfo appInfo) {
+        this.oaInfo = oaInfo;
+        this.appInfo = appInfo;
+    }
+
+    public JsonObject sendFollowMessage(long phone, String templateid, JsonObject templatedata, String callbackData) throws APIException {
+        JsonObject data = new JsonObject();
+        data.addProperty("phone", phone);
+        data.addProperty("templateid", templateid);
+        data.add("templatedata", templatedata);
+        data.addProperty("callbackdata", callbackData);
+        return sendMessageRequest(EndPoint.OA_SEND_FOLLOW_MESSAGE, data.toString());
+    }
+
+    public JsonObject getSliceTag() throws APIException {
+        Map<String, String> params = new HashMap<>();
+        params.put("oaid", String.valueOf(oaInfo.getOaId()));
+        long timestamp = System.currentTimeMillis();
+        params.put("timestamp", String.valueOf(timestamp));
+        String mac = MacUtils.buildMac(oaInfo.getOaId(), timestamp, oaInfo.getSecrect());
+        params.put("mac", mac);
+        JsonParser parser = new JsonParser();
+        String response = sendHttpGetRequest(EndPoint.OA_GET_SLICE_TAG, params, APIConfig.DEFAULT_HEADER);
+        return parser.parse(response).getAsJsonObject();
+    }
+
+    public JsonObject removeTag(String tagName) throws APIException {
+        Map<String, String> params = new HashMap<>();
+        JsonObject data = new JsonObject();
+        data.addProperty("tagName", tagName);
+        params.put("oaid", String.valueOf(oaInfo.getOaId()));
+        params.put("data", data.toString());
+        long timestamp = System.currentTimeMillis();
+        params.put("timestamp", String.valueOf(timestamp));
+        String mac = MacUtils.buildMac(oaInfo.getOaId(), data.toString(), timestamp, oaInfo.getSecrect());
+        params.put("mac", mac);
+        JsonParser parser = new JsonParser();
+        String response = sendHttpPostRequest(EndPoint.OA_REMOVE_TAG, params, APIConfig.DEFAULT_HEADER);
+        return parser.parse(response).getAsJsonObject();
+    }
+
+    public JsonObject removeUserFromTag(long uId, String tagName) throws APIException {
+        Map<String, String> params = new HashMap<>();
+        JsonObject data = new JsonObject();
+        data.addProperty("uid", uId);
+        data.addProperty("tagName", tagName);
+        params.put("oaid", String.valueOf(oaInfo.getOaId()));
+        params.put("data", data.toString());
+        long timestamp = System.currentTimeMillis();
+        params.put("timestamp", String.valueOf(timestamp));
+        String mac = MacUtils.buildMac(oaInfo.getOaId(), data.toString(), timestamp, oaInfo.getSecrect());
+        params.put("mac", mac);
+        JsonParser parser = new JsonParser();
+        String response = sendHttpPostRequest(EndPoint.OA_REMOVE_USER_FROM_TAG, params, APIConfig.DEFAULT_HEADER);
+        return parser.parse(response).getAsJsonObject();
+    }
+
+    public JsonObject tagUser(long uId, String tagName) throws APIException {
+        Map<String, String> params = new HashMap<>();
+        JsonObject data = new JsonObject();
+        data.addProperty("uid", uId);
+        data.addProperty("tagName", tagName);
+        params.put("oaid", String.valueOf(oaInfo.getOaId()));
+        params.put("data", data.toString());
+        long timestamp = System.currentTimeMillis();
+        params.put("timestamp", String.valueOf(timestamp));
+        String mac = MacUtils.buildMac(oaInfo.getOaId(), data.toString(), timestamp, oaInfo.getSecrect());
+        params.put("mac", mac);
+        JsonParser parser = new JsonParser();
+        String response = sendHttpPostRequest(EndPoint.OA_TAG_USER, params, APIConfig.DEFAULT_HEADER);
+        return parser.parse(response).getAsJsonObject();
+    }
+
+    public JsonObject getProfile(long userid) throws APIException {
+        Map<String, String> params = new HashMap<>();
+        params.put("oaid", String.valueOf(oaInfo.getOaId()));
+        params.put("uid", String.valueOf(userid));
+        long timestamp = System.currentTimeMillis();
+        params.put("timestamp", String.valueOf(timestamp));
+        String mac = MacUtils.buildMac(oaInfo.getOaId(), userid, timestamp, oaInfo.getSecrect());
+        params.put("mac", mac);
+        JsonParser parser = new JsonParser();
+        String response = sendHttpGetRequest(EndPoint.OA_GET_PROFILE, params, APIConfig.DEFAULT_HEADER);
+        return parser.parse(response).getAsJsonObject();
+    }
+
+    public JsonObject getMessageStatus(String msgid) throws APIException {
+        Map<String, String> params = new HashMap<>();
+        params.put("oaid", String.valueOf(oaInfo.getOaId()));
+        params.put("msgid", msgid);
+        long timestamp = System.currentTimeMillis();
+        params.put("timestamp", String.valueOf(timestamp));
+        String mac = MacUtils.buildMac(oaInfo.getOaId(), msgid, timestamp, oaInfo.getSecrect());
+        params.put("mac", mac);
+        JsonParser parser = new JsonParser();
+        String response = sendHttpGetRequest(EndPoint.OA_GET_MESSAGE_STATUS, params, APIConfig.DEFAULT_HEADER);
+        return parser.parse(response).getAsJsonObject();
+    }
+
+    private JsonObject sendMessageRequest(String endpoint, String data) throws APIException {
+        Map<String, String> params = new HashMap<>();
+        params.put("oaid", String.valueOf(oaInfo.getOaId()));
+        params.put("data", data);
+        long timestamp = System.currentTimeMillis();
+        params.put("timestamp", String.valueOf(timestamp));
+        String mac = MacUtils.buildMac(oaInfo.getOaId(), data, timestamp, oaInfo.getSecrect());
+        params.put("mac", mac);
+        JsonParser parser = new JsonParser();
+        String response = sendHttpPostRequest(endpoint, params, APIConfig.DEFAULT_HEADER);
+        return parser.parse(response).getAsJsonObject();
+    }
+
+    public JsonObject sendMessageCustomerCareByPhone(long phone, String templateid, JsonObject templatedata) throws APIException {
+        JsonObject data = new JsonObject();
+        data.addProperty("phone", phone);
+        data.addProperty("templateid", templateid);
+        data.add("templatedata", templatedata);
+        return sendMessageRequest(EndPoint.OA_SEND_MESSAGE_CUSTOMER_CARE_BY_PHONE, data.toString());
+    }
+
+    public JsonObject sendMessageCustomerCareByUserId(long userid, String templateid, JsonObject templatedata) throws APIException {
+        JsonObject data = new JsonObject();
+        data.addProperty("uid", userid);
+        data.addProperty("templateid", templateid);
+        data.add("templatedata", templatedata);
+        return sendMessageRequest(EndPoint.OA_SEND_MESSAGE_CUSTOMER_CARE_BY_USERID, data.toString());
+    }
+
+    public JsonObject sendActionMessage(long uid, List<MsgAction> actions) throws APIException {
+        JsonObject data = new JsonObject();
+        data.addProperty("uid", uid);
+        JsonArray arr = new JsonArray();
+        for (MsgAction action : actions) {
+            arr.add(JsonUtils.toJsonElement(action));
+        }
+        data.add("actionlist", arr);
+        return sendMessageRequest(EndPoint.OA_SEND_ACTION_MESSAGE, data.toString());
+    }
+
+    public JsonObject sendLinkMessage(long uid, List<MsgLink> links) throws APIException {
+        JsonObject data = new JsonObject();
+        data.addProperty("uid", uid);
+        JsonArray arr = new JsonArray();
+        for (MsgLink link : links) {
+            arr.add(JsonUtils.toJsonElement(link));
+        }
+        data.add("links", arr);
+        return sendMessageRequest(EndPoint.OA_SEND_LINK_MESSAGE, data.toString());
+    }
+
+    public JsonObject sendImageMessage(long uid, MsgImage imgMessage) throws APIException {
+        JsonObject data = new JsonObject();
+        data.addProperty("uid", uid);
+        data.addProperty("imageid", imgMessage.getImageid());
+        data.addProperty("message", imgMessage.getMessage());
+        return sendMessageRequest(EndPoint.OA_SEND_IMAGE_MESSAGE, data.toString());
+    }
+
+    public JsonObject sendGifMessage(long uid, MsgGif gifMessage) throws APIException {
+        JsonObject data = new JsonObject();
+        data.addProperty("uid", uid);
+        data.addProperty("imageid", gifMessage.getImageid());
+        data.addProperty("width", gifMessage.getWidth());
+        data.addProperty("height", gifMessage.getHeight());
+        return sendMessageRequest(EndPoint.OA_SEND_GIF_MESSAGE, data.toString());
+    }
+
+    public JsonObject sendTextMessage(long uid, String message) throws APIException {
+        JsonObject data = new JsonObject();
+        data.addProperty("uid", uid);
+        data.addProperty("message", message);
+        return sendMessageRequest(EndPoint.OA_SEND_TEXT_MESSAGE, data.toString());
+    }
+
+    public JsonObject sendStickerMessage(long uid, String stickerid) throws APIException {
+        JsonObject data = new JsonObject();
+        data.addProperty("uid", uid);
+        data.addProperty("stickerid", stickerid);
+        return sendMessageRequest(EndPoint.OA_SEND_STICKER_MESSAGE, data.toString());
+    }
+
+    public JsonObject uploadPhoto(String fileName) throws APIException {
+        return uploadPhotoOA(fileName, EndPoint.OA_UPLOAD_PHOTO);
+    }
+
+    public JsonObject uploadPhotoFromUrl(String url) throws APIException {
+        return uploadPhotoFromURL(url, EndPoint.OA_UPLOAD_PHOTO);
+    }
+
+    public JsonObject uploadGifPhoto(String fileName) throws APIException {
+        return uploadPhotoOA(fileName, EndPoint.OA_UPLOAD_GIF_PHOTO);
+    }
+
+    public JsonObject uploadGifPhotoFromUrl(String url) throws APIException {
+        return uploadPhotoFromURL(url, EndPoint.OA_UPLOAD_GIF_PHOTO);
+    }
+
+    private JsonObject uploadPhotoFromURL(String url, String enpoint) throws APIException {
+        try {
+            if (APIConfig.TEMPORARY_DIR == null) {
+                throw new APIException("please init temporary directory by using APIConfig.setTempDir(your_dir)");
+            }
+            String fileName = String.format("%s/%s", APIConfig.TEMPORARY_DIR, System.currentTimeMillis());
+            File file = new File(fileName);
+            FileUtils.copyURLToFile(new URL(url), file);
+            JsonObject uploadPhoto = uploadPhoto(file, enpoint);
+            file.deleteOnExit();
+            return uploadPhoto;
+        } catch (Exception ex) {
+            throw new APIException(ex);
+        }
+    }
+
+    private JsonObject uploadPhotoOA(String fileName, String enpoint) throws APIException {
+        File file = new File(fileName);
+        if (file.length() > MAXIMUM_FILE_SIZE) {
+            throw new APIException("file size exceeded the maximum size permitted");
+        }
+        return uploadPhoto(file, enpoint);
+    }
+
+    private JsonObject uploadPhoto(File file, String enpoint) throws APIException {
+        Map<String, String> params = new HashMap<>();
+        params.put("oaid", String.valueOf(oaInfo.getOaId()));
+        long timestamp = System.currentTimeMillis();
+        params.put("timestamp", String.valueOf(timestamp));
+        String mac = MacUtils.buildMac(oaInfo.getOaId(), timestamp, oaInfo.getSecrect());
+        params.put("mac", mac);

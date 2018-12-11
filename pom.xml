@@ -60,11 +60,6 @@
             <version>4.5.2</version>
             <type>jar</type>
         </dependency>
-        <dependency>
-            <groupId>ro.nextreports</groupId>
-            <artifactId>jofc2</artifactId>
-            <version>1.0.1</version>
-        </dependency>
     </dependencies>
     <name>zalo-java-sdk</name>
 </project>

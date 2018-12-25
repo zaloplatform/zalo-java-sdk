@@ -1,6 +1,6 @@
 # Zalo Platform SDK Java
 
-A SDK for building Chatbot, Community, Shop and Article on Zalo Platform.
+A SDK for building Chatbot, Shop and Article on Zalo Platform.
 
 
 Landing page: <a href="https://developers.zalo.me/">https://developers.zalo.me/</a><br>

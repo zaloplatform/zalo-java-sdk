@@ -99,7 +99,7 @@ public class ZaloBaseClient {
         try {
             try {
                 URIBuilder builder = new URIBuilder(enpointUrl);
-                
+
                 if (params != null) {
                     for (Map.Entry<String, String> entry : params.entrySet()) {
                         builder.addParameter(entry.getKey(), entry.getValue());
@@ -115,7 +115,7 @@ public class ZaloBaseClient {
                     }
                 }
                 httpPost.setEntity(new StringEntity(data.toString(), ContentType.APPLICATION_JSON));
-                
+
                 CloseableHttpResponse response = httpclient.execute(httpPost);
                 try {
                     HttpEntity entity = response.getEntity();
@@ -139,14 +139,14 @@ public class ZaloBaseClient {
             try {
                 CloseableHttpClient httpClient = HttpClients.createDefault();
                 URIBuilder builder = new URIBuilder(enpointUrl);
-                
+
                 if (params != null) {
                     for (Map.Entry<String, String> entry : params.entrySet()) {
                         builder.addParameter(entry.getKey(), entry.getValue());
                     }
                 }
                 HttpPost uploadFile = new HttpPost(builder.toString());
-                
+
                 if (isUseProxy) {
                     uploadFile.setConfig(config);
                 }
@@ -155,7 +155,7 @@ public class ZaloBaseClient {
                         uploadFile.addHeader(entry.getKey(), entry.getValue());
                     }
                 }
-                
+
                 MultipartEntityBuilder Mulbuilder = MultipartEntityBuilder.create();
 //                for (Map.Entry<String, String> entry : params.entrySet()) {
 //                    builder.addTextBody(entry.getKey(), entry.getValue(), ContentType.TEXT_PLAIN);
@@ -165,6 +165,62 @@ public class ZaloBaseClient {
                         "file",
                         new FileInputStream(file),
                         ContentType.MULTIPART_FORM_DATA,
+                        file.getName()
+                );
+                HttpEntity multipart = Mulbuilder.build();
+                uploadFile.setEntity(multipart);
+                CloseableHttpResponse response = httpClient.execute(uploadFile);
+                try {
+                    HttpEntity entity = response.getEntity();
+                    return EntityUtils.toString(entity);
+                } finally {
+                    response.close();
+                }
+
+            } catch (IOException ex) {
+                throw new APIException(ex);
+            } catch (URISyntaxException ex) {
+                throw new APIException(ex);
+            } finally {
+                httpclient.close();
+            }
+        } catch (APIException | IOException | ParseException ex) {
+            throw new APIException(ex);
+        }
+    }
+
+    protected String sendHttpUploadRequest(ContentType contentType, String enpointUrl, File file, Map<String, String> params, Map<String, String> header) throws APIException {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        try {
+            try {
+                CloseableHttpClient httpClient = HttpClients.createDefault();
+                URIBuilder builder = new URIBuilder(enpointUrl);
+
+                if (params != null) {
+                    for (Map.Entry<String, String> entry : params.entrySet()) {
+                        builder.addParameter(entry.getKey(), entry.getValue());
+                    }
+                }
+                HttpPost uploadFile = new HttpPost(builder.toString());
+
+                if (isUseProxy) {
+                    uploadFile.setConfig(config);
+                }
+                if (header != null) {
+                    for (Map.Entry<String, String> entry : header.entrySet()) {
+                        uploadFile.addHeader(entry.getKey(), entry.getValue());
+                    }
+                }
+
+                MultipartEntityBuilder Mulbuilder = MultipartEntityBuilder.create();
+//                for (Map.Entry<String, String> entry : params.entrySet()) {
+//                    builder.addTextBody(entry.getKey(), entry.getValue(), ContentType.TEXT_PLAIN);
+//                }
+                // This attaches the file to the POST:
+                Mulbuilder.addBinaryBody(
+                        "file",
+                        new FileInputStream(file),
+                        contentType,
                         file.getName()
                 );
                 HttpEntity multipart = Mulbuilder.build();

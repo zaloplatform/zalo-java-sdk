@@ -7,7 +7,7 @@
  *
  * As with any software that integrates with the Zalo platform, your use of this
  * software is subject to the Zalo Developer Principles and Policies
- * [http://developers.zaloapp.com/policy/]. This copyright notice shall be included
+ * [http://developers.zalo.me/policy/]. This copyright notice shall be included
  * in all copies or substantial portions of the software.
  *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
@@ -34,7 +34,7 @@ public class APIConfig {
 
     public static final String DEFAULT_OA_API_VERSION = "v2.0";
     public static final String DEFAULT_3RDAPP_API_VERSION = "v2.0";
-    public static final String DEFAULT_OA_API_BASE = "https://openapi.zaloapp.com/";
+    public static final String DEFAULT_OA_API_BASE = "https://openapi.zalo.me/";
 
     public static final String USER_AGENT = "zalosdk/2.0 Zalo Open API Java SDK";
     public static final String SDK_VERSION = "Java 2.0";

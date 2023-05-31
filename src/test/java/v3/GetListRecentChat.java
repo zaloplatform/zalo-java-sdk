@@ -1,3 +1,4 @@
+package v3;
 
 import com.google.gson.JsonObject;
 import com.vng.zalo.sdk.APIException;
@@ -10,30 +11,30 @@ import java.util.Map;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
- * @author hien
+ * @author hienhh
  */
-public class GetFollowerInfo {
+public class GetListRecentChat {
 
     public static void main(String[] args) throws APIException {
         ZaloOaClient client = new ZaloOaClient();
         String access_token = "your_access_token";
+
+        Map<String, String> headers = new HashMap<>();
+        headers.put("access_token", access_token);
         
-Map<String, String> headers = new HashMap<>();
-headers.put("access_token", access_token);
+        JsonObject dataValue = new JsonObject();
+        dataValue.addProperty("offset", 0);
+        dataValue.addProperty("count", 5);
 
-JsonObject data = new JsonObject();
-data.addProperty("user_id", "user_id");
+        Map<String, Object> params = new HashMap<>();
+        params.put("data", dataValue.toString());
 
-Map<String, Object> params = new HashMap<>();
-params.put("data", data.toString());
+        JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/oa/listrecentchat", "GET", params, null, headers, null);
 
-JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/oa/getprofile", "GET", params, null, headers, null);
-        
         System.err.println(excuteRequest);
-        
+
         System.exit(0);
     }
 }

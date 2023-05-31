@@ -22,14 +22,14 @@ public class UploadVideoForArticle {
         ZaloOaClient client = new ZaloOaClient();
         String access_token = "your_access_token";
         
-        Map<String, String> headers = new HashMap<>();
-        headers.put("access_token", access_token);
-        
-        Map<String, File> files = new HashMap<>();
-        File file = new File("/path/to/file");
-        files.put("file", file);
-        
-        JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/article/upload_video/preparevideo", "POST", null, null, headers, files);
+Map<String, String> headers = new HashMap<>();
+headers.put("access_token", access_token);
+
+Map<String, File> files = new HashMap<>();
+File file = new File("/path/to/file");
+files.put("file", file);
+
+JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/article/upload_video/preparevideo", "POST", null, null, headers, files);
         
         System.err.println(excuteRequest);
         

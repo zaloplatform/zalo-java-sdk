@@ -20,15 +20,15 @@ public class GetListArticle {
         ZaloOaClient client = new ZaloOaClient();
         String access_token = "your_access_token";
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("access_token", access_token);
+Map<String, String> headers = new HashMap<>();
+headers.put("access_token", access_token);
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("offset", 0);
-        params.put("limit", 2);
-        params.put("type", "normal"); //"normal" or "video";
+Map<String, Object> params = new HashMap<>();
+params.put("offset", 0);
+params.put("limit", 2);
+params.put("type", "normal"); //"normal" or "video";
 
-        JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/article/getslice", "GET", params, null, headers, null);
+JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/article/getslice", "GET", params, null, headers, null);
 
         System.err.println(excuteRequest);
 

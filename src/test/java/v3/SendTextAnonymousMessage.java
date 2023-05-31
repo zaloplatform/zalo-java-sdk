@@ -1,8 +1,8 @@
+package v3;
 
 import com.google.gson.JsonObject;
 import com.vng.zalo.sdk.APIException;
 import com.vng.zalo.sdk.oa.ZaloOaClient;
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import java.util.Map;
  *
  * @author hien
  */
-public class UploadImage {
+public class SendTextAnonymousMessage {
 
     public static void main(String[] args) throws APIException {
         ZaloOaClient client = new ZaloOaClient();
@@ -24,15 +24,22 @@ public class UploadImage {
         Map<String, String> headers = new HashMap<>();
         headers.put("access_token", access_token);
 
-        Map<String, File> files = new HashMap<>();
-        File file = new File("/path/to/file");
-        files.put("file", file);
+        JsonObject recipient = new JsonObject();
+        recipient.addProperty("conversation_id", "conversation_id");
+        recipient.addProperty("anonymous_id", "anonymous_id");
 
-        JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/oa/upload/image", "POST", null, null, headers, files);
+        JsonObject text = new JsonObject();
+        text.addProperty("text", "text_message");
+
+        JsonObject body = new JsonObject();
+        body.add("recipient", recipient);
+        body.add("message", text);
+        System.err.println(body);
+
+        JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/oa/message", "POST", null, body, headers, null);
 
         System.err.println(excuteRequest);
 
         System.exit(0);
-
     }
 }

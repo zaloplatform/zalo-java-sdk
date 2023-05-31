@@ -20,19 +20,19 @@ public class UpdateVideoArticle {
         ZaloOaClient client = new ZaloOaClient();
         String access_token = "your_access_token";
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("access_token", access_token);
+Map<String, String> headers = new HashMap<>();
+headers.put("access_token", access_token);
 
-        JsonObject videoArticle = new JsonObject();
-        videoArticle.addProperty("id", "article_id");
-        videoArticle.addProperty("type", "video");
-        videoArticle.addProperty("title", "article test");
-        videoArticle.addProperty("description", "description");
-        videoArticle.addProperty("video_id", "video_id");
-        videoArticle.addProperty("avatar", "https://developers.zalo.me/web/static/zalo.png");
-        videoArticle.addProperty("comment", "show");
+JsonObject videoArticle = new JsonObject();
+videoArticle.addProperty("id", "article_id");
+videoArticle.addProperty("type", "video");
+videoArticle.addProperty("title", "article test");
+videoArticle.addProperty("description", "description");
+videoArticle.addProperty("video_id", "video_id");
+videoArticle.addProperty("avatar", "https://developers.zalo.me/web/static/zalo.png");
+videoArticle.addProperty("comment", "show");
 
-        JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/article/update", "POST", null, videoArticle, headers, null);
+JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/article/update", "POST", null, videoArticle, headers, null);
 
         System.err.println(excuteRequest);
 

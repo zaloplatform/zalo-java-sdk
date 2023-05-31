@@ -21,17 +21,17 @@ public class GetListFollower {
         ZaloOaClient client = new ZaloOaClient();
         String access_token = "your_access_token";
         
-        Map<String, String> headers = new HashMap<>();
-        headers.put("access_token", access_token);
+Map<String, String> headers = new HashMap<>();
+headers.put("access_token", access_token);
 
-        JsonObject data = new JsonObject();
-        data.addProperty("offset", 0);
-        data.addProperty("count", 5);
-        
-        Map<String, Object> params = new HashMap<>();
-        params.put("data", data.toString());
+JsonObject data = new JsonObject();
+data.addProperty("offset", 0);
+data.addProperty("count", 5);
 
-        JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/oa/getfollowers", "GET", params, null, headers, null);
+Map<String, Object> params = new HashMap<>();
+params.put("data", data.toString());
+
+JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/oa/getfollowers", "GET", params, null, headers, null);
         
         System.err.println(excuteRequest);
         

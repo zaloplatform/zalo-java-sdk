@@ -20,20 +20,20 @@ public class SendTextMessage {
         ZaloOaClient client = new ZaloOaClient();
         String access_token = "your_access_token";
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("access_token", access_token);
+Map<String, String> headers = new HashMap<>();
+headers.put("access_token", access_token);
 
-        JsonObject id = new JsonObject();
-        id.addProperty("user_id", "user_id");
+JsonObject id = new JsonObject();
+id.addProperty("user_id", "user_id");
 
-        JsonObject text = new JsonObject();
-        text.addProperty("text", "text_message");
+JsonObject text = new JsonObject();
+text.addProperty("text", "text_message");
 
-        JsonObject body = new JsonObject();
-        body.add("recipient", id);
-        body.add("message", text);
+JsonObject body = new JsonObject();
+body.add("recipient", id);
+body.add("message", text);
 
-        JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/oa/message", "POST", null, body, headers, null);
+JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/oa/message", "POST", null, body, headers, null);
         
         System.err.println(excuteRequest);
         

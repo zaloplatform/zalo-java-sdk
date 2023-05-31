@@ -20,13 +20,13 @@ public class RemoveArticle {
         ZaloOaClient client = new ZaloOaClient();
         String access_token = "your_access_token";
 
-        Map<String, String> headers = new HashMap<>();
-        headers.put("access_token", access_token);
+Map<String, String> headers = new HashMap<>();
+headers.put("access_token", access_token);
 
-        JsonObject body = new JsonObject();
-        body.addProperty("id", "article_id");
+JsonObject body = new JsonObject();
+body.addProperty("id", "article_id");
 
-        JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/article/remove", "POST", null, body, headers, null);
+JsonObject excuteRequest = client.excuteRequest("https://openapi.zalo.me/v2.0/article/remove", "POST", null, body, headers, null);
 
         System.err.println(excuteRequest);
 

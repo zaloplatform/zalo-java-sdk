@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  *
- * @author nghiadc
+ * @author hienhh
  */
 public class StringUtils {
 
